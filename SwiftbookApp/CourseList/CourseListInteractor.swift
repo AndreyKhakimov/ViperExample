@@ -15,8 +15,7 @@ protocol CourseListInteractorInputProtocol {
 }
 
 protocol CourseListInteractorOutputProtocol: AnyObject {
-    func receiveDataForViewDidLoadState(with courses: [Course])
-    func receiveDataForSelectedRow(with course: Course)
+    func receiveDataForViewDidLoadState(with dataStore: CourseListDataStore)
 }
 
 class CourseListInteractor: CourseListInteractorInputProtocol {
@@ -29,7 +28,8 @@ class CourseListInteractor: CourseListInteractorInputProtocol {
     
     func provideDataForViewDidLoadState() {
         NetworkManager.shared.fetchData { [weak self] courses in
-            self?.presenter.receiveDataForViewDidLoadState(with: courses)
+            let dataStore = CourseListDataStore(courses: courses)
+            self?.presenter.receiveDataForViewDidLoadState(with: dataStore)
         }
     }
     

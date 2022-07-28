@@ -16,6 +16,7 @@ class CourseListPresenter: CourseListViewOutputProtocol {
     
     unowned let view: CourseListViewInputProtocol
     var interactor: CourseListInteractorInputProtocol!
+    var router: CourseListRouter!
     
     private var dataStore: CourseListDataStore?
     
@@ -28,20 +29,19 @@ class CourseListPresenter: CourseListViewOutputProtocol {
     }
     
     func didSelectCell(at indexPath: IndexPath) {
-        
+        guard let course = dataStore?.courses[indexPath.row] else { return }
+        router.openCourseDetailsViewController(with: course)
     }
     
 }
 
 extension CourseListPresenter: CourseListInteractorOutputProtocol {
     
-    func receiveDataForViewDidLoadState(with courses: [Course]) {
+    func receiveDataForViewDidLoadState(with dataStore: CourseListDataStore) {
+        self.dataStore = dataStore
         let section = CourseSectionViewModel()
-        courses.forEach { section.rows.append(CourseCellViewModel(course: $0)) }
+        dataStore.courses.forEach { section.rows.append(CourseCellViewModel(course: $0)) }
         view.reloadData(for: section)
-    }
-    
-    func receiveDataForSelectedRow(with course: Course) {
     }
     
 }

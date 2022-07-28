@@ -37,7 +37,8 @@ class CourseListViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let detailVC = segue.destination as! CourseDetailsViewController
-        detailVC.course = sender as? Course
+        let courseDetailsConfigurator: CourseDetailsConfiguratorInputProtocol = CourseDetailsConfigurator()
+        courseDetailsConfigurator.configure(with: detailVC, and: sender as! Course)
     }
     
     private func setupNavigationBar() {
